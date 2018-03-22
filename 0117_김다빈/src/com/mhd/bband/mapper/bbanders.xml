@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org/DTD/Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bbanders">
+	<select id="selectLogMember" parameterType="BBander" resultType="BBander">
+		SELECT no,id,password,nickname,profile 
+		FROM bbanders 
+		WHERE id=#{id} AND password=#{password}
+	</select>
+	<select id="selectCheckId" parameterType="String" resultType="int">
+		SELECT COUNT(id)
+		FROM bbanders
+		WHERE id=#{id}
+	</select>
+	<insert id="insertBBander" parameterType="BBander">
+		INSERT INTO bbanders(no,id,password,nickname,profile)
+		VALUES(bbanders_seq.nextval,#{id},#{password},#{nickname},#{profile})
+	</insert>
+	
+	
+</mapper>

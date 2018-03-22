@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org/DTD/Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="posts">
+	<select id="selectTotal" resultType="int">
+		SELECT COUNT(no)
+		FROM posts
+	</select>
+
+	<insert id="insertPost" parameterType="Post">
+		INSERT INTO posts(no, contents, writer, writer_no, regdate, profile)
+		VALUES(posts_seq.nextval, #{contents}, #{writer}, #{writerNo}, systimestamp, #{profile})
+	</insert>
+	<select id="selectPosts" resultType="Post" parameterType="Page">
+	SELECT no, contents, writer, writer_no writerNo, regdate, profile, rownum
+	FROM posts
+	WHERE rownum BETWEEN #{start} AND #{end}
+	ORDER BY regdate DESC
+	</select>
+	<delete id="deletePost" parameterType="int">
+		DELETE posts
+		WHERE no=#{no}
+	</delete>
+
+</mapper>
