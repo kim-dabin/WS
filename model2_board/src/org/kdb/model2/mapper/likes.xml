@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org/DTD/Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="likes">
+
+	<delete id="deleteLikes" parameterType="Like">
+		DELETE likes
+		WHERE type=#{type} AND type_no=#{typeNo}
+	</delete>
+	<insert id="insertLike" parameterType="Like">
+		<selectKey resultType="int" keyProperty="no" order="BEFORE">
+			SELECT likes_seq.nextval
+			FROM dual
+		</selectKey>
+		INSERT INTO likes(no, user_no, type, type_no, regdate)
+		VALUES(#{no}, #{userNo}, #{type}, #{typeNo}, systimestamp )
+	</insert>
+	<select id="selectLike" parameterType="Like" resultType="int">
+		SELECT COUNT(no)
+		FROM likes
+		WHERE type=#{type} AND type_no=#{typeNo} AND user_no = #{userNo}
+	</select>
+	<select id="selectLikeInfo" parameterType="Like" resultType="Like">
+		SELECT no, user_no, type, type_no typeNo, regdate
+		FROM likes
+		WHERE type=#{type} AND type_no=#{typeNo} AND user_no = #{userNo}
+	</select>
+
+	<delete id="deleteLike" parameterType="int">
+		DELETE likes
+		WHERE no=#{no}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<mvc:annotation-driven/>
+<mvc:view-resolvers>
+	<mvc:jsp prefix="/WEB-INF/view/" suffix=".jsp"/>
+</mvc:view-resolvers>
+
+<!-- resource 설정 -->
+<mvc:resources location="/css/" mapping="/css/**"></mvc:resources>
+<mvc:resources location="/fonts/" mapping="/fonts/**"></mvc:resources>
+<mvc:resources location="/img/" mapping="/img/**"></mvc:resources>
+<mvc:resources location="/js/" mapping="/js/**"></mvc:resources>
+<mvc:resources location="/profile/" mapping="/profile/**"></mvc:resources>
+
+<!-- Controller 등록 -->
+<bean id="UsersController" p:usersService-ref="usersService" class="org.kdb.model2.controller.UsersController"/>
+<bean id="RepliesController" class="org.kdb.model2.controller.RepliesController" p:repliesService-ref="repliesService" />
+<bean id="ArticlesController" p:articlesService-ref="articlesService" p:repliesService-ref="repliesService" 
+p:likesService-ref="likesService" class="org.kdb.model2.controller.ArticlesController"/>
+<bean id="LikesController" class="org.kdb.model2.controller.LikesController" 
+p:likesService-ref="likesService" p:articlesService-ref="articlesService"/>
+<!-- interceptor 설정 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/article/write"/>
+			<mvc:mapping path="/article/update"/>
+			<bean class="org.kdb.model2.interceptor.LoginCheckInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+<!-- mulitpartResolver 설정 -->
+	 <bean
+	 id="multipartResolver"
+	 class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+	 p:maxUploadSizePerFile="104857600"
+	 p:defaultEncoding="UTF-8"/>
+</beans>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org/DTD/Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="replies">
+	<delete id="deleteReply" parameterType="int">
+		DELETE replies
+		WHERE no=#{no}	
+	</delete>
+
+
+	<delete id="deleteReplies" parameterType="int">
+		DELETE replies
+		WHERE article_no = #{articleNo}
+	</delete>
+
+	<insert id="insertReply" parameterType="Reply">
+		INSERT INTO replies(no, contents, writer, writer_no, article_no, profile, regdate)
+		VALUES(replies_seq.nextval, #{contents}, #{writer}, #{writerNo}, #{articleNo}, #{profile}, systimestamp)
+	</insert>
+
+	<select id="selectReplies" resultType="Reply" parameterType="PageVO">
+	SELECT no, contents, writer, writerNo, articleNo, profile, regdate, r
+	FROM (SELECT no, contents, writer, writerNo, articleNo, profile, regdate, rownum r
+	FROM (SELECT no, contents, writer, writer_no writerNo, article_no articleNo, profile, regdate
+	FROM replies
+	WHERE article_no=#{no}
+	ORDER BY no DESC))
+	WHERE r BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="selectTotal" resultType="int" parameterType="int">
+	SELECT COUNT(no)
+	FROM replies
+	WHERE article_no=#{articleNo}
+	</select>
+	
+</mapper>

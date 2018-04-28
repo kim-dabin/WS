@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org/DTD/Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="articles">
+
+	<update id="updateArticle" parameterType="Article">
+		UPDATE articles 
+		SET title = #{title}, contents=#{contents}
+		WHERE no=#{no}
+	</update>
+
+	<delete id="deleteArticle" parameterType="int">
+		DELETE articles
+		WHERE no = #{no}
+	
+	</delete>
+
+	<update id="updateLikes" parameterType="int">
+		UPDATE articles
+		SET likes=(SELECT COUNT(no) FROM likes WHERE type='A' AND type_no=#{no})
+		WHERE no =#{no}
+	</update>
+
+	<update id="updateReplies" parameterType="int">
+	UPDATE articles
+	SET replies = (SELECT COUNT(no) FROM replies WHERE article_no = #{no})
+	WHERE no = #{no}
+	</update>
+
+	<insert id="insertArticle" parameterType="Article">
+		<selectKey keyProperty="no" order="BEFORE" resultType="int" >
+			SELECT articles_seq.nextval 
+			FROM dual
+		</selectKey>
+		INSERT INTO articles(no, title, contents, writer, writer_no, profile, hit, replies, regdate, likes)
+		VALUES(#{no}, #{title}, #{contents}, #{writer}, #{writerNo}, #{profile}, 0, 0, systimestamp, 0)
+	</insert>
+
+	<select id="selectArticle" resultType="Article" parameterType="int">
+		SELECT no, title, contents, writer, writer_no writerNo, hit, replies, regdate, likes, profile
+		FROM articles
+		WHERE no=#{no}
+	</select>
+
+
+	<select id="selectTotal" resultType="int">
+		SELECT COUNT(no)
+		FROM articles
+	</select>
+
+
+	<select id="selectArticles" resultType="Article" parameterType="PageVO">
+		SELECT no, title, contents, writer, writerNo, profile, hit, replies, regdate, r, likes
+		FROM (SELECT no, title, contents, writer, writerNo, profile, hit, replies, regdate, rownum r, likes
+			FROM (SELECT no, title, contents, writer, writer_no writerNo, profile, hit, replies, regdate, likes
+				FROM articles
+				ORDER BY no DESC))
+		WHERE r BETWEEN #{start} AND #{end}
+	</select>
+	
+</mapper>

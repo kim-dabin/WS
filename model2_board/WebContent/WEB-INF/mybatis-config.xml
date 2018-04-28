@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC
+"-//mybatis.org/DTD/Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- NULL 허용하는 setting -->
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+	<typeAliases>
+		<typeAlias alias="Article" type="org.kdb.model2.vo.Article"/> 
+		<typeAlias alias="Reply" type="org.kdb.model2.vo.Reply"/>
+		<typeAlias alias="User" type="org.kdb.model2.vo.User"/>
+		<typeAlias alias="PageVO" type="org.kdb.model2.vo.PageVO"/>
+		<typeAlias alias="Like" type="org.kdb.model2.vo.Like"/>
+	</typeAliases>
+	<!-- 매퍼 파일 경로 설 정 -->
+	<mappers>
+		<mapper resource="org/kdb/model2/mapper/articles.xml"/>
+		<mapper resource="org/kdb/model2/mapper/replies.xml"/>
+		<mapper resource="org/kdb/model2/mapper/users.xml"/>
+		<mapper resource="org/kdb/model2/mapper/likes.xml"/>
+	</mappers>
+</configuration>
